@@ -7,12 +7,21 @@ router.get('/:subdomain', async (req, res) => {
   try {
     const { subdomain } = req.params;
     
+    console.log('=== TRAIL REQUEST DEBUG ===');
+    console.log('Subdomain:', subdomain);
+    console.log('SUPABASE_URL:', process.env.SUPABASE_URL);
+    console.log('SUPABASE_SERVICE_KEY exists:', !!process.env.SUPABASE_SERVICE_KEY);
+    console.log('SUPABASE_SERVICE_KEY length:', process.env.SUPABASE_SERVICE_KEY?.length);
+    
     const { data: trail, error } = await supabase
       .from('trails')
       .select('*')
       .eq('subdomain', subdomain)
       .eq('is_active', true)
       .single();
+    
+    console.log('Supabase query error:', error);
+    console.log('Supabase query data:', trail);
     
     if (error || !trail) {
       return res.status(404).json({ 
